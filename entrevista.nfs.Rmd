@@ -1,0 +1,94 @@
+---
+title: "Script para o trabalho  Responsável pelas NFs e lançamentos do dia a dia"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+---
+install.packages("readxl")
+install.packages("prettydoc")
+install.packages("OpenRepGrid")
+install.packages("kableExtra")
+
+```{r setup, include=FALSE}
+require(readxl)
+require(prettydoc)
+require(OpenRepGrid)
+library(kableExtra)
+
+# For "kableExtra," we need to specify "html" format:
+kable(head(airquality), digits = 2, format = "html", row.names = TRUE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = F,
+                font_size = 12,
+                position = "left")
+```
+
+# Análise da Grade de Repertório
+
+```{r 1, include=FALSE}
+dados <- importExcel("ent.nfs.xlsx")
+#a <- distance(dados, dmethod = "canberra")
+#kable(a, digits = 2, fontsize=6, row.names = FALSE)
+```
+
+## Análise Elementos
+
+### Estatística descritiva:
+
+```{r 2, include=TRUE}
+est.elem <- statsElements(dados)
+est.elem
+```
+Considerando as médias como base temos os valores, em ordem crescente: Excel (média= 4,57; DP= 1,99; n= 7),Sheets (média= 2,86; DP= 2,04; n= 7),Zenfisio (média=2,71, DP=1,98, n=7), Quickbooks (média= 2,43; DP= 1,81; n= 7)
+
+
+### Correlação entre os elementos:
+
+```{r 3, include=TRUE}
+cor.elem <- elementCor(dados,rc=FALSE, method = "pearson")
+cor.elem
+```
+
+Os maiores valores de correlação positiva ocorreram entre 3 grupos: 1)Quickbooks e Excel, 2)Quickbooks e Sheets e 3)Excel e Sheets, com r=0,52. Em sequência entre Quickbooks e Zenfisio, com r=0,27. Por fim, restaram as correlações negativas que foram entre Zenfisio e Excel com r=-0,04 e Zenfisio com Sheets, com r= -0,34. 
+
+## Análise Construtos
+
+### Estatística descritiva:
+
+```{r 4, include=TRUE}
+est.const <- statsConstructs(dados)
+est.const
+```
+Considerando as médias como base temos os valores, em ordem crescente: "Adesão pelos outros colaboradores - Baixa adesão pelos outros colaboradores" (média= 5,0; DP= 1,41; n= 4),"Ferramenta unificada com várias funcionalidades - Ferramenta com poucas funcionalidades" (média= 4,00; DP= 2,45; n= 4), "Ótimo - Péssimo" (média= 4,00; DP=1,83; n= 4), "Independência de terceiros - Dependência de terceiros" (média= 3,00; DP=2,45; n= 4), "Rapidez para cadastrar os dados - Cadastro demorado" (média= 2,50; DP=0,58; n= 4), "Acesso de qualquer lugar - Acesso limitado à máquina" (média=2,25, DP=2,50, n=4) e "Fácil de aprender a usar - Dificuldade em aprender a usar" (média=1,25, DP=0,5, n=4)
+
+
+
+### Correlação entre os construtos:
+
+```{r 5, include=TRUE}
+cor.const <- constructCor(dados, method="pearson")
+cor.const
+```
+A maior correlação positiva encontrada na análise foi entre "Rapidez para cadastrar os dados - Cadastro demorado" e "Ferramenta unificada com várias funcionalidades - Ferramenta com poucas funcionalidades", com r=0,94.
+
+Em sequência a maior correlação positiva foi entre "Adesão pelos outros colaboradores - Baixa adesão pelos outros colaboradores" e "Independência de terceiros - Dependência de terceiros", com  r=0,29.
+
+A maior correlação negativa foi entre "Independência de terceiros - Dependência de terceiros" e "Ferramenta unificada com várias funcionalidades - Ferramenta com poucas funcionalidades", com  r=-0,50.
+
+A segunda maior correlação negativa foi entre "Adesão pelos outros colaboradores - Baixa adesão pelos outros colaboradores" e "Rapidez para cadastrar os dados - Cadastro demorado", com r=-0,41. 
+
+A terceira maior correlação negativa foi entre "Adesão pelos outros colaboradores - Baixa adesão pelos outros colaboradores" e Ferramenta unificada com várias funcionalidades - Ferramenta com poucas funcionalidades", com r=-0,29. 
+
+Por fim, a correlação negativa mais próxima de 0 foi entre "Rapidez para cadastrar os dados - Cadastro demorado" e "Independência de terceiros - Dependência de terceiros", com  r=-0,24.
+
+
+## Clusters
+
+```{r 6}
+cluster(dados)
+
+bertinCluster(dados, colors = c("white", "blue"))
+
+#biplotSimple(dados, c.label.cex = 0.4, e.point.col = "blue", zoom = 1.25)
+```

@@ -1,0 +1,94 @@
+---
+title: "Script para o trabalho Entrevista Final responsável pela Contabilidade"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+---
+install.packages("readxl")
+install.packages("prettydoc")
+install.packages("OpenRepGrid")
+install.packages("kableExtra")
+
+```{r setup, include=FALSE}
+require(readxl)
+require(prettydoc)
+require(OpenRepGrid)
+library(kableExtra)
+
+# For "kableExtra," we need to specify "html" format:
+kable(head(airquality), digits = 2, format = "html", row.names = TRUE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = F,
+                font_size = 12,
+                position = "left")
+```
+
+# Análise da Grade de Repertório
+
+```{r 1, include=FALSE}
+dados <- importExcel("ent.final.contab.xlsx")
+#a <- distance(dados, dmethod = "canberra")
+#kable(a, digits = 2, fontsize=6, row.names = FALSE)
+```
+
+## Análise Elementos
+
+### Estatística descritiva:
+
+```{r 2, include=TRUE}
+est.elem <- statsElements(dados)
+est.elem
+```
+Considerando as médias como base temos os valores, em ordem crescente: Zenfisio (média= 4,6; DP= 0,55; n= 5), Quickbooks (média= 3,8; DP= 1,10; n= 5), Sheets (média= 2,6; DP= 1,14; n= 5) e Excel (média= 1,4; DP= 0,55; n= 5). 
+
+
+### Correlação entre os elementos:
+
+```{r 3, include=TRUE}
+cor.elem <- elementCor(dados,rc=FALSE, method = "pearson")
+cor.elem
+```
+
+O maior valor de correlação encontrado foi entre Excel e Sheets (r=0,72). O segundo maior valor, em sequência, foi entre Quickbooks e Zenfisio (r=0,67). O terceiro maior valor foi entre Quickbooks e Sheets (r=0,32) e os menores foram entre Excel e Quickbooks (r=0,17) e Excel e Zenfisio (r=0,-17). 
+
+## Análise Construtos
+
+### Estatística descritiva:
+
+```{r 4, include=TRUE}
+est.const <- statsConstructs(dados)
+est.const
+```
+Considerando as médias como base temos os valores, em ordem crescente: "Ótimo - Péssimo" (média= 4,0; DP= 1,41; n= 4),"Flexibilidade para fazer cálculos e Rigidez para fazer os cálculos" (média= 3,25; DP=2,06; n= 4), "Facilidade de uso - Dificuldade de uso" (média= 3,00; DP=1,63; n= 4)  e "Organização das informações - Desorganização das informações" (média= 3,00; DP=0,82; n= 4), "Foco nas informações importantes/ Muita informação que gera complexidade" (média= 2,25; DP=1,50; n= 4)
+
+
+### Correlação entre os construtos:
+
+```{r 5, include=TRUE}
+cor.const <- constructCor(dados, method="pearson")
+cor.const
+```
+A maior correlação encontrada na análise foi entre "Facilidade de uso
+ - Dificuldade de uso" e "Organização das informações - Desorganização das informações", com r=1,0.
+
+Em sequência a maior correlação foi entre "Flexibilidade para fazer cálculos e Rigidez para fazer os cálculos" e "Foco nas informações importantes/ Muita informação que gera complexidade", com  r=0,94.
+
+Em terceiro lugar foi entre os grupos "Flexibilidade para fazer cálculos e Rigidez para fazer os cálculos" e "Ótimo - Péssimo", com r=0,91. 
+
+Em quarto lugar foi entre os grupos "Facilidade de uso
+ - Dificuldade de uso" e "Ótimo - Péssimo", r=0,87. Houve o mesmo valor de correlação entre "Ótimo - Péssimo" e "Organização das informações - Desorganização das informações". 
+ 
+Em quinto lugar, encontramos r=0,82 entre os grupos "Facilidade de uso - Dificuldade de uso" e "Foco nas informações importantes/ Muita informação que gera complexidade" e também entre os grupos "Foco nas informações importantes/ Muita informação que gera complexidade" e "Organização das informações - Desorganização das informações". 
+
+O menor valor de correlação encontrado r=0,79 e ocorreu entre 3 grupos diferentes: 1) "Flexibilidade para fazer cálculos e Rigidez para fazer os cálculos" e "Facilidade de uso - Dificuldade de uso", 2) "Flexibilidade para fazer cálculos e Rigidez para fazer os cálculos" e "Organização das informações - Desorganização das informações" e 3) "Foco nas informações importantes/ Muita informação que gera complexidade" e "Ótimo - Péssimo". 
+
+## Clusters
+
+```{r 6}
+cluster(dados)
+
+bertinCluster(dados, colors = c("white", "blue"))
+
+#biplotSimple(dados, c.label.cex = 0.4, e.point.col = "blue", zoom = 1.25)
+```

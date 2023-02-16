@@ -1,0 +1,98 @@
+---
+title: "Script para o trabalho Entrevista final responsável pelo financeiro"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+---
+install.packages("readxl")
+install.packages("prettydoc")
+install.packages("OpenRepGrid")
+install.packages("kableExtra")
+
+```{r setup, include=FALSE}
+require(readxl)
+require(prettydoc)
+require(OpenRepGrid)
+library(kableExtra)
+
+# For "kableExtra," we need to specify "html" format:
+kable(head(airquality), digits = 2, format = "html", row.names = TRUE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = F,
+                font_size = 12,
+                position = "left")
+```
+
+# Análise da Grade de Repertório
+
+```{r 1, include=FALSE}
+dados <- importExcel("Entrevista_final_financeiro.xlsx")
+#a <- distance(dados, dmethod = "canberra")
+#kable(a, digits = 2, fontsize=6, row.names = FALSE)
+```
+
+## Análise Elementos
+
+### Estatística descritiva:
+
+```{r 2, include=TRUE}
+est.elem <- statsElements(dados)
+est.elem
+```
+
+Considerando as médias como base temos os valores, em ordem crescente: Excel (Média = 3,5; DP= 2,15; n= 12), Sheets (Média = 2.83; DP= 1,90; n= 12), Quickbooks (2.42; DP= 1,83; n= 12) e Zenfisio (Média = 2,33; DP= 1,44; n= 12). 
+
+### Correlação entre os elementos:
+
+```{r 3, include=TRUE}
+cor.elem <- elementCor(dados,rc=FALSE, method = "pearson")
+cor.elem
+```
+
+O maior valor de correlação encontrado foi entre Excel e Sheets (r = 0,58). O segundo maior valor, em sequência, foi entre Zenfisio e Sheets (r = -0,48) e Quickbooks e Zenfisio (r = 0,43). Seguido do valor entre Zenfisio e excel (r = -0,35). O menor foi entre Quickbooks e Excel (r = 0,33). 
+
+## Análise Construtos
+
+### Estatística descritiva:
+
+```{r 4, include=TRUE}
+est.const <- statsConstructs(dados)
+est.const
+```
+Considerando as médias como base temos os valores, em ordem crescente: "Várias funcionalidades em um mesmo sistema" (Média = 5; DP= 2 ;n= 4), "Facilidade de adoção de ferramentas - Dificuldade de adoção de ferramentas" (Média = 4,75;DP=1,89 n= 4),"Possui notificações - não possu notificações" (Média= 3,5;DP=2,89; n= 4)," Ótimo - Péssimo" (Média= 3,25;DP=1,5; n= 4), "Comparação rápida através de gráficos - Comparação demorada através de leitura dos resultados" (Média= 2,5;DP=1; n= 4), "Ajuda a manter os pagamentos em dia - Não ajuda a manter os pagamentos em dia" (Média= 2,25;DP=1,5; n= 4), "Atualização em tempo real (online) - Atualização assíncrona" (Média= 2,25;DP=2,5; n= 4). Seguidos de "Visualização rápida das despesas fixas - Exportar resultado e filtrar" (Média= 2,0;DP=1,15; n= 4),"Filtros mais elaborados - Dificuldade de coletar informações rápidas através de filtros" (Média= 2,0;DP=0,82; n= 4), "Ferramenta barata/acessível - Ferramenta mais cara" (Média= 2,0;DP=1,41; n= 4), "Informação sobre reserva de dinheiro - Dificuldade em obter informação sobre reserva financeira" (Média= 2,0;DP=1,15; n= 4) e por fim, "Relatório de fluxo de caixa amplo 12 (meses) - Relatório de fluxo de caixa curto (3 meses)" (Média= 1,75;DP=1,5; n= 4)
+
+### Correlação entre os construtos:
+
+```{r 5, include=TRUE}
+cor.const <- constructCor(dados, method="pearson")
+cor.const
+```
+
+"Várias funcionalidades em um mesmo sistema - Necessidade de utilização de várias ferramentas" teve uma alta correlação positiva com "Comparação rápida através de gráficos - Comparação demorada através de leitura dos resultados" (r = 1,0)
+
+Por outro lado, "Várias funcionalidades em um mesmo sistema - Necessidade de utilização de várias ferramentas" teve uma alta correlação negativa com "Relatório de fluxo de caixa amplo 12 (meses) - Relatório de fluxo de caixa curto (3 meses)" (r = -1,0)
+
+Assim como, "Relatório de fluxo de caixa amplo 12 (meses) - Relatório de fluxo de caixa curto (3 meses)" teve uma alta correlação negativa com "Comparação rápida através de gráficos - Comparação demorada através de leitura dos resultados" (r = -1,0)
+
+"Possui notificações/lembretes - Não possui notificações" teve uma alta correlação positiva com "Informação sobre reserva de dinheiro - Dificuldade em obter informação sobre reserva financeira " (r = 1,0)
+
+Além disso,"Possui notificações/lembretes - Não possui notificações" teve alta correlação negativa com "Visualização rápida das despesas fixas - Exportar resultado e filtrar" (r = -1,0) e com  "Visualização rápida das despesas fixas - Exportar resultado e filtrar" (r=-1,0) 
+
+Por outro lado,"Possui notificações/lembretes - Não possui notificações" teve uma alta correlação positiva com "Ajuda a manter os pagamentos em dia - Não ajuda a manter os pagamentos em dia" (teve uma alta correlação com (r = 0,96). 
+
+"Visualização rápida das despesas fixas - Exportar resultado e filtrar" teve uma alta correlação negativa com "Ótimo - Péssimo" (r = -0,96)
+
+Enquanto, "Informação sobre reserva de dinheiro - Dificuldade em obter informação sobre reserva financeira" teve uma alta correlação positiva com "Ótimo - Péssimo" (r = 0,96)
+
+"Facilidade de adoção da ferramenta pelos colaboradores - Dificuldade de adoção da ferramenta pelos colaboradores" teve baixos valores de correlação com: "Várias funcionalidades em um mesmo sistema - Necessidade de utilização de várias ferramentas" (r= -0,9), "Relatório de fluxo de caixa amplo 12 (meses) - Relatório de fluxo de caixa curto (3 meses)" (r = 0,9) e "Comparação rápida através de gráficos - Comparação demorada através de leitura dos resultados" (r= -0,9)
+
+## Clusters
+
+```{r 6}
+cluster(dados)
+
+bertinCluster(dados, colors = c("white", "blue"))
+
+#biplotSimple(dados, c.label.cex = 0.4, e.point.col = "blue", zoom = 1.25)
+```
